@@ -16,7 +16,6 @@ Middleware order in api/main.py (outermost to innermost):
 
 from __future__ import annotations
 
-import re
 from urllib.parse import urlsplit
 
 from fastapi import Request, status

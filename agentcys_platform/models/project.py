@@ -33,7 +33,7 @@ class CustomerProject(BaseModel):
         }
 
     @classmethod
-    def from_firestore(cls, doc: dict[str, Any]) -> "CustomerProject":
+    def from_firestore(cls, doc: dict[str, Any]) -> CustomerProject:
         created_at = doc["created_at"]
         if isinstance(created_at, str):
             created_at = datetime.fromisoformat(created_at)

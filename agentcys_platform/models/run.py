@@ -40,7 +40,7 @@ class DeploymentRun(BaseModel):
         }
 
     @classmethod
-    def from_firestore(cls, doc: dict[str, Any]) -> "DeploymentRun":
+    def from_firestore(cls, doc: dict[str, Any]) -> DeploymentRun:
         def _dt(v: str | None) -> datetime | None:
             return datetime.fromisoformat(v) if isinstance(v, str) else v
 

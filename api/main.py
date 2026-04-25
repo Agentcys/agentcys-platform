@@ -37,6 +37,7 @@ logger = logging.getLogger(__name__)
 
 # ── Lifespan (startup / shutdown) ────────────────────────────────────────────
 
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Initialise shared resources on startup; clean up on shutdown."""
@@ -66,11 +67,12 @@ async def lifespan(app: FastAPI):
     if getattr(app.state, "db", None) is not None:
         try:
             app.state.db.close()
-        except Exception:  # pragma: no cover
-            pass
+        except Exception:  # pragma: no cover  # noqa: S110
+            logger.debug("Firestore client close failed on shutdown")
 
 
 # ── App factory ───────────────────────────────────────────────────────────────
+
 
 def create_app() -> FastAPI:
     """Build and return the configured FastAPI application.
@@ -111,7 +113,12 @@ def create_app() -> FastAPI:
         CORSMiddleware,
         allow_origins=cors_origins,
         allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-        allow_headers=["Authorization", "Content-Type", "X-Agentcys-Signature", "X-Agentcys-Timestamp"],
+        allow_headers=[
+            "Authorization",
+            "Content-Type",
+            "X-Agentcys-Signature",
+            "X-Agentcys-Timestamp",
+        ],
         allow_credentials=True,
         max_age=600,
     )

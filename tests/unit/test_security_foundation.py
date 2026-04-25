@@ -11,7 +11,6 @@ from agentcys_platform.security.audit import (
     AuditEvent,
     AuditSeverity,
     PlatformEvent,
-    audit_event_emitter,
 )
 from agentcys_platform.security.hmac_signer import sign_payload, verify_signature
 from agentcys_platform.security.tenant_guard import (
@@ -22,8 +21,8 @@ from agentcys_platform.security.tenant_guard import (
     tenant_filter_for_actor,
 )
 
-
 # ── Audit ────────────────────────────────────────────────────────────────────
+
 
 class TestAuditEvent:
     def test_to_dict_contains_required_fields(self):
@@ -72,7 +71,7 @@ class TestAuditEmitter:
     async def test_history_capped_at_max(self):
         emitter = AuditEmitter()
         emitter._max_history = 5
-        for i in range(10):
+        for _i in range(10):
             await emitter.emit(AuditEvent(event_type=PlatformEvent.AUTH_GRANTED))
         assert len(emitter.recent_events()) == 5
 
@@ -97,6 +96,7 @@ class TestAuditEmitter:
 
 
 # ── Tenant guard ─────────────────────────────────────────────────────────────
+
 
 class TestTenantGuard:
     def _user(self, tenant_id: str = "", role: str = "member") -> dict:
@@ -164,8 +164,9 @@ class TestTenantGuard:
 
 # ── HMAC signer ──────────────────────────────────────────────────────────────
 
+
 class TestHmacSigner:
-    SECRET = "test-secret-value-for-unit-tests-x"
+    SECRET = "test-secret-value-for-unit-tests-x"  # noqa: S105
 
     def test_sign_and_verify_roundtrip(self):
         payload = b'{"deployment_id": "dep-1", "operation": "apply"}'

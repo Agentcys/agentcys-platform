@@ -24,6 +24,7 @@ _PLATFORM_WIDE_ROLES = {"platform_admin", "platform_ops", "support"}
 
 # ── Actor helpers ────────────────────────────────────────────────────────────
 
+
 def get_actor_role(user: dict[str, Any]) -> str:
     return str(user.get("role") or "viewer").strip()
 
@@ -57,6 +58,7 @@ def can_access_tenant(user: dict[str, Any], tenant_id: str) -> bool:
 
 
 # ── Guard ────────────────────────────────────────────────────────────────────
+
 
 def ensure_tenant_access(
     user: dict[str, Any],

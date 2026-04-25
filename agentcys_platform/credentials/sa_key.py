@@ -27,7 +27,9 @@ class SAKeyCredentialProvider(CustomerCredentialProvider):
     def __init__(self, secret_manager_client: Any) -> None:
         self._client = secret_manager_client
 
-    async def get_credentials(self, credential_id: str, *, secret_uri: str, tenant_id: str = "") -> dict:  # type: ignore[override]
+    async def get_credentials(  # type: ignore[override]
+        self, credential_id: str, *, secret_uri: str, tenant_id: str = ""
+    ) -> dict:
         """Fetch and parse a SA key from Secret Manager.
 
         *secret_uri* must be the full resource name:

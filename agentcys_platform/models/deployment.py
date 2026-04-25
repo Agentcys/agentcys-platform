@@ -19,9 +19,9 @@ class Deployment(BaseModel):
     name: str
     params: dict[str, Any]
     outputs: dict[str, Any] | None = None
-    status: Literal[
-        "pending", "applying", "applied", "failed", "destroying", "destroyed"
-    ] = "pending"
+    status: Literal["pending", "applying", "applied", "failed", "destroying", "destroyed"] = (
+        "pending"
+    )
     created_at: datetime
     updated_at: datetime
     current_run_id: str | None = None
@@ -43,7 +43,7 @@ class Deployment(BaseModel):
         }
 
     @classmethod
-    def from_firestore(cls, doc: dict[str, Any]) -> "Deployment":
+    def from_firestore(cls, doc: dict[str, Any]) -> Deployment:
         def _dt(v: str | datetime) -> datetime:
             return datetime.fromisoformat(v) if isinstance(v, str) else v
 

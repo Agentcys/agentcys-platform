@@ -34,9 +34,7 @@ def _build_app(max_body_bytes: int = 1_048_576) -> FastAPI:
         allow_credentials=True,
     )
     app.add_middleware(SecurityHeadersMiddleware, platform_origin=ALLOWED_ORIGIN)
-    app.add_middleware(
-        FetchMetadataCsrfMiddleware, allowed_origins=[ALLOWED_ORIGIN]
-    )
+    app.add_middleware(FetchMetadataCsrfMiddleware, allowed_origins=[ALLOWED_ORIGIN])
 
     @app.get("/health")
     async def health():
@@ -61,6 +59,7 @@ def tiny_client():
 
 
 # ── Security headers ─────────────────────────────────────────────────────────
+
 
 class TestSecurityHeaders:
     def test_x_content_type_options(self, client):
@@ -89,6 +88,7 @@ class TestSecurityHeaders:
 
 # ── CSRF middleware ───────────────────────────────────────────────────────────
 
+
 class TestCsrfMiddleware:
     def test_get_request_is_always_allowed(self, client):
         r = client.get("/health")
@@ -109,9 +109,7 @@ class TestCsrfMiddleware:
         assert r.status_code == 200
 
     def test_post_with_untrusted_referer_is_rejected(self, client):
-        r = client.post(
-            "/data", headers={"Referer": "https://evil.example.com/page"}
-        )
+        r = client.post("/data", headers={"Referer": "https://evil.example.com/page"})
         assert r.status_code == 403
         assert r.json()["detail"]["error"] == "csrf_referer_denied"
 
@@ -153,6 +151,7 @@ class TestCsrfMiddleware:
 
 
 # ── Body size limit ───────────────────────────────────────────────────────────
+
 
 class TestBodySizeLimit:
     def test_small_body_is_accepted(self, tiny_client):

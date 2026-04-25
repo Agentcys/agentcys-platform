@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import datetime
 from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict
@@ -25,7 +25,7 @@ class Tenant(BaseModel):
         }
 
     @classmethod
-    def from_firestore(cls, doc: dict[str, Any]) -> "Tenant":
+    def from_firestore(cls, doc: dict[str, Any]) -> Tenant:
         created_at = doc["created_at"]
         if isinstance(created_at, str):
             created_at = datetime.fromisoformat(created_at)

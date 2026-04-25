@@ -25,7 +25,7 @@ import logging
 import time
 from collections.abc import Callable, Coroutine
 from dataclasses import dataclass, field
-from enum import Enum
+from enum import StrEnum
 from typing import Any
 from uuid import uuid4
 
@@ -34,7 +34,8 @@ logger = logging.getLogger(__name__)
 
 # ── Event type vocabulary ────────────────────────────────────────────────────
 
-class PlatformEvent(str, Enum):
+
+class PlatformEvent(StrEnum):
     # Auth / access
     AUTH_DENIED = "auth.denied"
     AUTH_GRANTED = "auth.granted"
@@ -59,7 +60,7 @@ class PlatformEvent(str, Enum):
     BLUEPRINT_PUBLISHED = "blueprint.published"
 
 
-class AuditSeverity(str, Enum):
+class AuditSeverity(StrEnum):
     INFO = "info"
     WARNING = "warning"
     ERROR = "error"
@@ -67,6 +68,7 @@ class AuditSeverity(str, Enum):
 
 
 # ── Audit envelope ───────────────────────────────────────────────────────────
+
 
 @dataclass
 class AuditEvent:

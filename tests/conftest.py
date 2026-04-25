@@ -9,12 +9,11 @@ from __future__ import annotations
 
 from collections import defaultdict
 from typing import Any
-from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-
 # ── Two-tenant fixture ───────────────────────────────────────────────────────
+
 
 @pytest.fixture()
 def tenant_alpha() -> dict[str, Any]:
@@ -33,6 +32,7 @@ def platform_admin() -> dict[str, Any]:
 
 # ── In-memory Firestore mock ─────────────────────────────────────────────────
 
+
 class _FakeDocSnapshot:
     def __init__(self, data: dict[str, Any] | None) -> None:
         self._data = data
@@ -46,10 +46,10 @@ class _FakeQuery:
     def __init__(self, docs: list[dict[str, Any]]) -> None:
         self._docs = list(docs)
 
-    def where(self, **_: Any) -> "_FakeQuery":  # noqa: ANN001
+    def where(self, **_: Any) -> _FakeQuery:  # noqa: ANN001
         return self
 
-    def limit(self, n: int) -> "_FakeQuery":
+    def limit(self, n: int) -> _FakeQuery:
         self._docs = self._docs[:n]
         return self
 

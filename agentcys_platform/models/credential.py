@@ -33,7 +33,7 @@ class CustomerCredential(BaseModel):
         }
 
     @classmethod
-    def from_firestore(cls, doc: dict[str, Any]) -> "CustomerCredential":
+    def from_firestore(cls, doc: dict[str, Any]) -> CustomerCredential:
         def _dt(v: str | None) -> datetime | None:
             return datetime.fromisoformat(v) if isinstance(v, str) else v
 

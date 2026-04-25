@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import pytest
 
@@ -13,11 +13,11 @@ from agentcys_platform.models.project import CustomerProject
 from agentcys_platform.models.run import DeploymentRun
 from agentcys_platform.models.tenant import Tenant
 
-
-NOW = datetime(2026, 4, 25, 12, 0, 0, tzinfo=timezone.utc)
+NOW = datetime(2026, 4, 25, 12, 0, 0, tzinfo=UTC)
 
 
 # ── Tenant ───────────────────────────────────────────────────────────────────
+
 
 class TestTenant:
     def _make(self, **kwargs) -> Tenant:
@@ -41,7 +41,7 @@ class TestTenant:
         assert t2.plan == t.plan
 
     def test_invalid_plan_raises(self):
-        with pytest.raises(Exception):
+        with pytest.raises(Exception):  # noqa: B017
             self._make(plan="enterprise_plus")
 
     def test_created_at_preserved(self):
@@ -51,6 +51,7 @@ class TestTenant:
 
 
 # ── CustomerProject ───────────────────────────────────────────────────────────
+
 
 class TestCustomerProject:
     def _make(self, **kwargs) -> CustomerProject:
@@ -79,13 +80,14 @@ class TestCustomerProject:
 
 # ── CustomerCredential ────────────────────────────────────────────────────────
 
+
 class TestCustomerCredential:
     def _make(self, **kwargs) -> CustomerCredential:
         return CustomerCredential(
             credential_id="cred-01",
             tenant_id="t-01",
             kind="sa_key",
-            secret_manager_uri="projects/our-proj/secrets/cred-01/versions/latest",
+            secret_manager_uri="projects/our-proj/secrets/cred-01/versions/latest",  # noqa: S106
             sa_email="svc@acme.iam.gserviceaccount.com",
             created_at=NOW,
             **kwargs,
@@ -111,6 +113,7 @@ class TestCustomerCredential:
 
 
 # ── Blueprint ─────────────────────────────────────────────────────────────────
+
 
 class TestBlueprint:
     def test_roundtrip(self):
@@ -155,6 +158,7 @@ class TestBlueprintVersion:
 
 # ── Deployment ────────────────────────────────────────────────────────────────
 
+
 class TestDeployment:
     def _make(self, **kwargs) -> Deployment:
         return Deployment(
@@ -185,11 +189,12 @@ class TestDeployment:
         assert d2.params == {"image": "gcr.io/acme/api:latest"}
 
     def test_invalid_status_raises(self):
-        with pytest.raises(Exception):
+        with pytest.raises(Exception):  # noqa: B017
             self._make(status="unknown-status")
 
 
 # ── DeploymentRun ─────────────────────────────────────────────────────────────
+
 
 class TestDeploymentRun:
     def _make(self, **kwargs) -> DeploymentRun:

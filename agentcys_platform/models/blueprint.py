@@ -25,7 +25,7 @@ class Blueprint(BaseModel):
         }
 
     @classmethod
-    def from_firestore(cls, doc: dict[str, Any]) -> "Blueprint":
+    def from_firestore(cls, doc: dict[str, Any]) -> Blueprint:
         return cls(
             blueprint_id=doc["blueprint_id"],
             name=doc["name"],
@@ -57,7 +57,7 @@ class BlueprintVersion(BaseModel):
         }
 
     @classmethod
-    def from_firestore(cls, doc: dict[str, Any]) -> "BlueprintVersion":
+    def from_firestore(cls, doc: dict[str, Any]) -> BlueprintVersion:
         published_at = doc["published_at"]
         if isinstance(published_at, str):
             published_at = datetime.fromisoformat(published_at)

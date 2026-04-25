@@ -78,9 +78,11 @@ class TenantScopedStore:
 
         await audit_event_emitter.emit(
             AuditEvent(
-                event_type=PlatformEvent.DEPLOYMENT_CREATED
-                if collection == COLLECTION_DEPLOYMENTS
-                else f"{collection}.created",
+                event_type=(
+                    PlatformEvent.DEPLOYMENT_CREATED
+                    if collection == COLLECTION_DEPLOYMENTS
+                    else f"{collection}.created"
+                ),
                 tenant_id=str(data.get("tenant_id") or ""),
                 actor=actor or {},
                 resource={"collection": collection, "id": doc_id},
@@ -145,9 +147,7 @@ class TenantScopedStore:
     ) -> None:
         """Merge *updates* into an existing document."""
         if caller_tenant_id is not None:
-            existing = await self.get_by_id(
-                collection, doc_id, caller_tenant_id=caller_tenant_id
-            )
+            existing = await self.get_by_id(collection, doc_id, caller_tenant_id=caller_tenant_id)
             if existing is None:
                 return  # not found — caller handles 404
 
@@ -178,9 +178,7 @@ class TenantScopedStore:
         tenant_id_for_audit = caller_tenant_id or ""
 
         if caller_tenant_id is not None:
-            existing = await self.get_by_id(
-                collection, doc_id, caller_tenant_id=caller_tenant_id
-            )
+            existing = await self.get_by_id(collection, doc_id, caller_tenant_id=caller_tenant_id)
             if existing is not None:
                 tenant_id_for_audit = str(existing.get("tenant_id") or caller_tenant_id)
 
@@ -199,6 +197,7 @@ class TenantScopedStore:
 
 
 # ── Firestore query filter helper ────────────────────────────────────────────
+
 
 def _field_filter(field: str, op: str, value: Any):
     """Build a Firestore FieldFilter, compatible with the google-cloud-firestore ≥2.x API."""
