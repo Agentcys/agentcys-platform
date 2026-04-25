@@ -1,5 +1,5 @@
 """API route modules for v1 endpoints."""
 
-from api.routes import credentials, projects, tenants
+from api.routes import blueprints, credentials, projects, tenants
 
-__all__ = ["tenants", "credentials", "projects"]
+__all__ = ["tenants", "credentials", "projects", "blueprints"]

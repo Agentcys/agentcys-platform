@@ -26,7 +26,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from api.middleware.auth import APIKeyAuthMiddleware
-from api.routes import credentials, projects, tenants
+from api.routes import blueprints, credentials, projects, tenants
 from agentcys_platform.config import get_settings
 from agentcys_platform.security.http_security import (
     FetchMetadataCsrfMiddleware,
@@ -138,6 +138,7 @@ def create_app() -> FastAPI:
     app.include_router(tenants.router, prefix="/v1")
     app.include_router(credentials.router, prefix="/v1")
     app.include_router(projects.router, prefix="/v1")
+    app.include_router(blueprints.router, prefix="/v1")
 
     @app.get("/health", tags=["ops"], summary="Liveness probe")
     async def health() -> dict[str, Any]:

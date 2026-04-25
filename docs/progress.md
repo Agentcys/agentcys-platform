@@ -46,3 +46,15 @@ sequenceDiagram
     Firestore-->>-API: persisted
     API-->>-Client: 201 Created (no secret material)
 ```
+
+### API Changes (Blueprint Catalog)
+
+| Area | Change | Notes |
+|---|---|---|
+| Blueprints | Added `GET /v1/blueprints` | Returns global blueprint list including latest version payload |
+| Blueprints | Added `GET /v1/blueprints/{blueprint_id}` | Returns blueprint metadata and latest version detail |
+
+### Validation
+
+- Added unit tests for blueprint catalog service list/detail logic.
+- Added integration tests for authenticated blueprint list/detail endpoints.
