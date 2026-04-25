@@ -34,7 +34,7 @@ dev = [
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["platform*", "api*", "worker*"]
+include = ["agentcys_platform*", "api*", "worker*"]
 
 [tool.ruff]
 line-length = 100
