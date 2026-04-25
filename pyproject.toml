@@ -1,6 +1,6 @@
 [build-system]
 requires = ["setuptools>=68", "wheel"]
-build-backend = "setuptools.backends.legacy:build"
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "agentcys-platform"
@@ -34,7 +34,7 @@ dev = [
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["platform*", "api*", "worker*"]
+include = ["agentcys_platform*", "api*", "worker*"]
 
 [tool.ruff]
 line-length = 100
