@@ -10,6 +10,10 @@
 | POST | /v1/projects | API key | `ProjectService.link_project` | `project.linked` |
 | GET | /v1/blueprints | API key | `BlueprintService.list_blueprints` | N/A |
 | GET | /v1/blueprints/{blueprint_id} | API key | `BlueprintService.get_blueprint_with_latest` | N/A |
+| POST | /v1/deployments | API key | `DeploymentService.create_deployment` | `deployment.created` |
+| GET | /v1/deployments/{deployment_id} | API key | `DeploymentService.get_deployment` | N/A |
+| GET | /v1/deployments | API key | `DeploymentService.list_deployments` | N/A |
+| DELETE | /v1/deployments/{deployment_id} | API key | `DeploymentService.destroy_deployment` | `deployment.destroyed` (queued) |
 
 ## Middleware Stack
 
@@ -45,6 +49,20 @@ sequenceDiagram
     API->>+Firestore: query blueprint_versions by latest_version
     Firestore-->>-API: version payload
     API-->>-Client: 200 OK { blueprint + latest }
+```
+
+## Deployment Queue Flow
+
+```mermaid
+sequenceDiagram
+    Client->>+API: DELETE /v1/deployments/{id}
+    API->>+Firestore: load deployment + verify tenant + status=applied
+    Firestore-->>-API: deployment
+    API->>+Firestore: create deployment_run (operation=destroy, status=queued)
+    Firestore-->>-API: run persisted
+    API->>+CloudTasks: enqueue destroy task(run_id, deployment_id)
+    CloudTasks-->>-API: queued
+    API-->>-Client: 202 Accepted
 ```
 
 ## Auth Data Flow

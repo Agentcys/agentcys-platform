@@ -110,7 +110,9 @@ def test_create_credential_201_and_no_secret_material(monkeypatch):
 
             return _Version()
 
-    monkeypatch.setattr(CredentialService, "_build_resource_manager_client", lambda self: _FakeCRM())
+    monkeypatch.setattr(
+        CredentialService, "_build_resource_manager_client", lambda self: _FakeCRM()
+    )
     monkeypatch.setattr(CredentialService, "_build_secret_manager_client", lambda self: _FakeSM())
 
     app = create_app()

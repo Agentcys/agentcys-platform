@@ -30,7 +30,9 @@ class CredentialService:
         self._db = db
         self._settings = settings
 
-    async def create_credential(self, *, tenant_id: str, sa_key: dict[str, Any]) -> CustomerCredential:
+    async def create_credential(
+        self, *, tenant_id: str, sa_key: dict[str, Any]
+    ) -> CustomerCredential:
         self._validate_sa_key(sa_key)
 
         project_id = str(sa_key["project_id"])

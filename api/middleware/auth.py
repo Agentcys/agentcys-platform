@@ -63,7 +63,11 @@ class APIKeyAuthMiddleware(BaseHTTPMiddleware):
                 event_type=PlatformEvent.AUTH_GRANTED,
                 tenant_id=request.state.tenant_id,
                 actor={"type": "api_key", "id": request.state.api_key_id},
-                resource={"kind": "http_request", "path": request.url.path, "method": request.method},
+                resource={
+                    "kind": "http_request",
+                    "path": request.url.path,
+                    "method": request.method,
+                },
                 outcome={"success": True},
             )
         )
@@ -98,9 +102,7 @@ class APIKeyAuthMiddleware(BaseHTTPMiddleware):
 
 
 async def _lookup_api_key(db: Any, hashed_key: str) -> dict[str, Any] | None:
-    query = db.collection(_TENANT_KEYS_COLLECTION).where(
-        filter=("key_hash", "==", hashed_key)
-    )
+    query = db.collection(_TENANT_KEYS_COLLECTION).where(filter=("key_hash", "==", hashed_key))
     query = query.limit(1)
     docs = await query.get()
     if not docs:

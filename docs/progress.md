@@ -58,3 +58,27 @@ sequenceDiagram
 
 - Added unit tests for blueprint catalog service list/detail logic.
 - Added integration tests for authenticated blueprint list/detail endpoints.
+
+### API Changes (Deployments)
+
+| Area | Change | Notes |
+|---|---|---|
+| Deployments | Added `POST /v1/deployments` | Validates tenant project ownership, blueprint/version, JSON schema params, unique name; creates deployment + queued apply run; enqueues Cloud Task |
+| Deployments | Added `GET /v1/deployments/{deployment_id}` | Tenant-scoped detail with current run payload |
+| Deployments | Added `GET /v1/deployments` | Tenant-scoped list with `project_id`, `status`, `limit`, `offset`, and pagination metadata |
+| Deployments | Added `DELETE /v1/deployments/{deployment_id}` | Tenant-scoped destroy queueing (only when current status is `applied`) |
+
+### Request Flow (Deployment create)
+
+```mermaid
+sequenceDiagram
+    Client->>+API: POST /v1/deployments
+    API->>+Firestore: verify project + blueprint/version
+    Firestore-->>-API: validated resources
+    API->>API: jsonschema validate params + enforce unique name
+    API->>+Firestore: create deployment + deployment_run(queued)
+    Firestore-->>-API: persisted
+    API->>+CloudTasks: create task(run_id, deployment_id)
+    CloudTasks-->>-API: queued
+    API-->>-Client: 201 Created
+```

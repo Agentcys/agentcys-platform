@@ -45,7 +45,7 @@ class _FakeDB:
 
 
 class _FakeSettings:
-    SECRET_MANAGER_PROJECT = "secrets-proj"
+    SECRET_MANAGER_PROJECT = "secrets-proj"  # noqa: S105
 
 
 class _FakeCRMClient:

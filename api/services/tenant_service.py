@@ -29,7 +29,9 @@ class TenantService:
             created_at=datetime.now(UTC),
         )
 
-        await self._db.collection(_TENANTS_COLLECTION).document(tenant.tenant_id).set(tenant.to_firestore())
+        await self._db.collection(_TENANTS_COLLECTION).document(tenant.tenant_id).set(
+            tenant.to_firestore()
+        )
         return tenant
 
     async def create_api_key(self, *, tenant_id: str, label: str | None = None) -> dict[str, str]:

@@ -7,9 +7,9 @@ from typing import Any
 from fastapi import APIRouter, HTTPException, Request, status
 from pydantic import BaseModel, Field
 
+from agentcys_platform.config import get_settings
 from api.middleware.auth import get_request_tenant_id
 from api.services.credential_service import CredentialService
-from agentcys_platform.config import get_settings
 
 router = APIRouter(tags=["credentials"])
 
@@ -27,7 +27,9 @@ class CredentialResponse(BaseModel):
 
 
 @router.post("/credentials", response_model=CredentialResponse, status_code=status.HTTP_201_CREATED)
-async def create_credential(payload: CreateCredentialRequest, request: Request) -> CredentialResponse:
+async def create_credential(
+    payload: CreateCredentialRequest, request: Request
+) -> CredentialResponse:
     db = getattr(request.app.state, "db", None)
     if db is None:
         raise HTTPException(status_code=503, detail={"error": "firestore_unavailable"})

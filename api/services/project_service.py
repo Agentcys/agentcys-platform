@@ -29,7 +29,9 @@ class ProjectService:
         default_region: str,
         state_bucket: str,
     ) -> CustomerProject:
-        credential = await self._db.collection(_CREDENTIALS_COLLECTION).document(credential_id).get()
+        credential = (
+            await self._db.collection(_CREDENTIALS_COLLECTION).document(credential_id).get()
+        )
         if not credential.exists:
             raise ValueError("credential_not_found")
 
@@ -55,7 +57,9 @@ class ProjectService:
             status="linked",
         )
 
-        await self._db.collection(_PROJECTS_COLLECTION).document(project.project_id).set(project.to_firestore())
+        await self._db.collection(_PROJECTS_COLLECTION).document(project.project_id).set(
+            project.to_firestore()
+        )
 
         await audit_event_emitter.emit(
             AuditEvent(
