@@ -1,0 +1,27 @@
+# Progress Log
+
+## 2026-04-25
+
+### API Changes
+
+| Area | Change | Notes |
+|---|---|---|
+| Auth | Added `X-API-Key` middleware for `/v1/*` routes | Resolves `tenant_id` from hashed keys in Firestore (`tenant_api_keys`) |
+| Tenants | Added `POST /v1/tenants` | Creates tenant with plan and timestamp |
+| API Keys | Added `POST /v1/tenants/{tenant_id}/api-keys` | Returns plaintext API key once; stores only SHA-256 hash |
+
+### Request Flow (Tenant API key authentication)
+
+```mermaid
+sequenceDiagram
+    Client->>+API: GET /v1/protected + X-API-Key
+    API->>+Firestore: query tenant_api_keys by sha256(key)
+    Firestore-->>-API: tenant_id, key_id
+    API->>API: set request.state.tenant_id
+    API-->>-Client: 200 OK
+```
+
+### Validation
+
+- Added unit tests for tenant service create + API key hashing.
+- Added integration tests for auth middleware allow/deny behavior.

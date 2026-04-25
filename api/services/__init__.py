@@ -1,1 +1,5 @@
-"""API service layer — populated in Prompt 2."""
+"""API service layer for route handlers."""
+
+from api.services.tenant_service import TenantService
+
+__all__ = ["TenantService"]

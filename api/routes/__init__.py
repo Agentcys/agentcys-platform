@@ -1,1 +1,5 @@
-"""API route modules — populated in Prompt 2."""
+"""API route modules for v1 endpoints."""
+
+from api.routes import tenants
+
+__all__ = ["tenants"]

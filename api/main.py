@@ -25,6 +25,8 @@ from typing import Any
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from api.middleware.auth import APIKeyAuthMiddleware
+from api.routes import tenants
 from agentcys_platform.config import get_settings
 from agentcys_platform.security.http_security import (
     FetchMetadataCsrfMiddleware,
@@ -129,10 +131,11 @@ def create_app() -> FastAPI:
         max_bytes=settings.REQUEST_MAX_BODY_BYTES,
     )
 
+    # 0. API key auth for v1 tenant-scoped endpoints
+    app.add_middleware(APIKeyAuthMiddleware)
+
     # ── Routes ──────────────────────────────────────────────────────────
-    # Prompt 2 will add routers here:
-    # from api.routes import deployments, projects, credentials, blueprints
-    # app.include_router(deployments.router, prefix="/deployments", tags=["deployments"])
+    app.include_router(tenants.router, prefix="/v1")
 
     @app.get("/health", tags=["ops"], summary="Liveness probe")
     async def health() -> dict[str, Any]:
