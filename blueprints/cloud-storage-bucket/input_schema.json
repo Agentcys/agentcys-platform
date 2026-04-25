@@ -1,0 +1,53 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "cloud-storage-bucket input schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "project_id",
+    "region",
+    "resource_name_prefix",
+    "bucket_name_suffix"
+  ],
+  "properties": {
+    "project_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "region": {
+      "type": "string",
+      "minLength": 1
+    },
+    "resource_name_prefix": {
+      "type": "string",
+      "minLength": 1
+    },
+    "bucket_name_suffix": {
+      "type": "string",
+      "minLength": 1
+    },
+    "storage_class": {
+      "type": "string",
+      "default": "STANDARD"
+    },
+    "versioning": {
+      "type": "boolean",
+      "default": false
+    },
+    "uniform_bucket_level_access": {
+      "type": "boolean",
+      "default": true
+    },
+    "lifecycle_age_days": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "default": null
+    },
+    "force_destroy": {
+      "type": "boolean",
+      "default": false
+    }
+  }
+}
