@@ -25,3 +25,24 @@ sequenceDiagram
 
 - Added unit tests for tenant service create + API key hashing.
 - Added integration tests for auth middleware allow/deny behavior.
+
+### API Changes (Credential + Project)
+
+| Area | Change | Notes |
+|---|---|---|
+| Credentials | Added `POST /v1/credentials` | Validates SA key fields, verifies project access, stores secret in Secret Manager, persists `CustomerCredential` |
+| Projects | Added `POST /v1/projects` | Validates credential ownership, ensures customer state bucket with versioning, persists `CustomerProject` |
+
+### Request Flow (Credential upload)
+
+```mermaid
+sequenceDiagram
+    Client->>+API: POST /v1/credentials
+    API->>+CloudResourceManager: projects.get
+    CloudResourceManager-->>-API: project access verified
+    API->>+SecretManager: create_secret + add_secret_version
+    SecretManager-->>-API: secret version URI
+    API->>+Firestore: insert customer_credentials
+    Firestore-->>-API: persisted
+    API-->>-Client: 201 Created (no secret material)
+```
