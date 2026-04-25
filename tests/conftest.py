@@ -7,10 +7,21 @@ Provides:
 
 from __future__ import annotations
 
+import os
 from collections import defaultdict
 from typing import Any
 
 import pytest
+
+# Ensure app settings can be constructed during test module import/collection.
+os.environ.setdefault("APP_ENV", "test")
+os.environ.setdefault("CORS_ALLOWED_ORIGINS", "http://localhost:3000")
+os.environ.setdefault("GCP_PROJECT_ID", "test-project")
+os.environ.setdefault("SECRET_MANAGER_PROJECT", "test-project")
+os.environ.setdefault("STATE_MIRROR_BUCKET", "test-state-bucket")
+os.environ.setdefault("BLUEPRINT_BUCKET", "test-blueprint-bucket")
+os.environ.setdefault("CLOUD_TASKS_QUEUE", "test-queue")
+os.environ.setdefault("HMAC_SIGNING_SECRET", "test-secret-at-least-32-chars-xxxx")
 
 # ── Two-tenant fixture ───────────────────────────────────────────────────────
 

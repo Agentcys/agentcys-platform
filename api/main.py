@@ -31,6 +31,8 @@ from agentcys_platform.security.http_security import (
     RequestBodySizeLimitMiddleware,
     SecurityHeadersMiddleware,
 )
+from api.middleware.auth import APIKeyAuthMiddleware
+from api.routes import blueprints, credentials, deployments, projects, tenants
 
 logger = logging.getLogger(__name__)
 
@@ -116,6 +118,7 @@ def create_app() -> FastAPI:
         allow_headers=[
             "Authorization",
             "Content-Type",
+            "X-API-Key",
             "X-Agentcys-Signature",
             "X-Agentcys-Timestamp",
         ],
@@ -129,10 +132,15 @@ def create_app() -> FastAPI:
         max_bytes=settings.REQUEST_MAX_BODY_BYTES,
     )
 
+    # 0. API key auth for v1 tenant-scoped endpoints
+    app.add_middleware(APIKeyAuthMiddleware)
+
     # ── Routes ──────────────────────────────────────────────────────────
-    # Prompt 2 will add routers here:
-    # from api.routes import deployments, projects, credentials, blueprints
-    # app.include_router(deployments.router, prefix="/deployments", tags=["deployments"])
+    app.include_router(tenants.router, prefix="/v1")
+    app.include_router(credentials.router, prefix="/v1")
+    app.include_router(projects.router, prefix="/v1")
+    app.include_router(blueprints.router, prefix="/v1")
+    app.include_router(deployments.router, prefix="/v1")
 
     @app.get("/health", tags=["ops"], summary="Liveness probe")
     async def health() -> dict[str, Any]:

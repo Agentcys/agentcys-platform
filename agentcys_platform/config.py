@@ -96,6 +96,7 @@ class Settings(BaseSettings):
     # Cloud Tasks queue used to dispatch worker jobs
     CLOUD_TASKS_QUEUE: str
     CLOUD_TASKS_LOCATION: str = "us-central1"
+    DEPLOYMENT_TASK_TARGET_URL: str = "https://worker.invalid/tasks/deployments"
 
     # ── Auth ─────────────────────────────────────────────────────────────
     HMAC_SIGNING_SECRET: str  # HMAC-SHA256 secret for API ↔ Worker auth
