@@ -1,0 +1,45 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "secret-manager-secret input schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "project_id",
+    "region",
+    "resource_name_prefix",
+    "secret_id",
+    "secret_value"
+  ],
+  "properties": {
+    "project_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "region": {
+      "type": "string",
+      "minLength": 1
+    },
+    "resource_name_prefix": {
+      "type": "string",
+      "minLength": 1
+    },
+    "secret_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "secret_value": {
+      "type": "string",
+      "minLength": 1,
+      "writeOnly": true,
+      "x-sensitive": true
+    },
+    "replication": {
+      "type": "string",
+      "default": "automatic",
+      "enum": [
+        "automatic",
+        "user_managed"
+      ]
+    }
+  }
+}
