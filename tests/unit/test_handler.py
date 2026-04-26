@@ -3,14 +3,33 @@
 from __future__ import annotations
 
 import json
+import os
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import MagicMock, patch
 
 import pytest
 
-from worker.handler import execute_run
+# Ensure required env vars are set before importing worker modules
+os.environ.setdefault("GCP_PROJECT_ID", "test-project")
+os.environ.setdefault("SECRET_MANAGER_PROJECT", "test-project")
+os.environ.setdefault("STATE_MIRROR_BUCKET", "test-state-bucket")
+os.environ.setdefault("BLUEPRINT_BUCKET", "test-blueprint-bucket")
+os.environ.setdefault("CLOUD_TASKS_QUEUE", "test-queue")
+os.environ.setdefault("HMAC_SIGNING_SECRET", "test-secret-at-least-32-chars-xxxx")
+os.environ.setdefault("APP_ENV", "test")
+
+from worker.config import get_worker_settings  # noqa: E402
+from worker.handler import execute_run  # noqa: E402
+
+
+@pytest.fixture(autouse=True)
+def clear_settings_cache():
+    """Clear the lru_cache so each test gets a fresh WorkerSettings."""
+    get_worker_settings.cache_clear()
+    yield
+    get_worker_settings.cache_clear()
 
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
@@ -139,6 +158,18 @@ def _make_gcs_client() -> MagicMock:
     return client
 
 
+def _make_mock_workspace(mock_ws_cls: MagicMock) -> MagicMock:
+    """Configure a mock WorkspaceManager for handler tests."""
+    fake_dir = Path("/nonexistent/fake-run")  # noqa: S108
+    ws = MagicMock()
+    ws.workspace_dir = fake_dir
+    ws.create.return_value = fake_dir
+    ws.write_sa_key.return_value = fake_dir / "sa_key.json"
+    ws.download_module.return_value = fake_dir / "module"
+    mock_ws_cls.return_value = ws
+    return ws
+
+
 # ── Tests ─────────────────────────────────────────────────────────────────────
 
 
@@ -175,13 +206,7 @@ async def test_execute_run_apply_happy_path(
     }
     fs = _make_fake_firestore(docs)
 
-    # Mock workspace
-    ws = MagicMock()
-    ws.workspace_dir = Path("/tmp/fake-run")
-    ws.create.return_value = ws.workspace_dir
-    ws.write_sa_key.return_value = Path("/tmp/fake-run/sa_key.json")
-    ws.download_module.return_value = Path("/tmp/fake-run/module")
-    mock_ws_cls.return_value = ws
+    ws = _make_mock_workspace(mock_ws_cls)
 
     # Mock runner with success
     runner = MagicMock()
@@ -222,17 +247,10 @@ async def test_execute_run_marks_failed_on_init_error(
     }
     fs = _make_fake_firestore(docs)
 
-    ws = MagicMock()
-    ws.workspace_dir = Path("/tmp/fake-run")
-    ws.create.return_value = ws.workspace_dir
-    ws.write_sa_key.return_value = Path("/tmp/fake-run/sa_key.json")
-    ws.download_module.return_value = Path("/tmp/fake-run/module")
-    mock_ws_cls.return_value = ws
+    ws = _make_mock_workspace(mock_ws_cls)
 
     runner = MagicMock()
-    runner.init.return_value = MagicMock(
-        returncode=1, stderr=b"Error: backend init failed"
-    )
+    runner.init.return_value = MagicMock(returncode=1, stderr=b"Error: backend init failed")
     mock_runner_cls.return_value = runner
 
     await execute_run("run-001", "dep-001", fs, _make_gcs_client(), _make_secrets_client())
@@ -259,12 +277,7 @@ async def test_execute_run_marks_failed_on_apply_error(
     }
     fs = _make_fake_firestore(docs)
 
-    ws = MagicMock()
-    ws.workspace_dir = Path("/tmp/fake-run")
-    ws.create.return_value = ws.workspace_dir
-    ws.write_sa_key.return_value = Path("/tmp/fake-run/sa_key.json")
-    ws.download_module.return_value = Path("/tmp/fake-run/module")
-    mock_ws_cls.return_value = ws
+    ws = _make_mock_workspace(mock_ws_cls)
 
     runner = MagicMock()
     runner.init.return_value = MagicMock(returncode=0)
@@ -297,12 +310,7 @@ async def test_execute_run_destroy_happy_path(
     }
     fs = _make_fake_firestore(docs)
 
-    ws = MagicMock()
-    ws.workspace_dir = Path("/tmp/fake-run")
-    ws.create.return_value = ws.workspace_dir
-    ws.write_sa_key.return_value = Path("/tmp/fake-run/sa_key.json")
-    ws.download_module.return_value = Path("/tmp/fake-run/module")
-    mock_ws_cls.return_value = ws
+    ws = _make_mock_workspace(mock_ws_cls)
 
     runner = MagicMock()
     runner.init.return_value = MagicMock(returncode=0)

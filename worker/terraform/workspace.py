@@ -17,7 +17,9 @@ class WorkspaceManager:
     The workspace is created on demand and removed by ``cleanup()``.
     """
 
-    def __init__(self, run_id: str, runs_base_dir: str = "/tmp/agentcys-runs") -> None:
+    def __init__(
+        self, run_id: str, runs_base_dir: str = "/tmp/agentcys-runs"
+    ) -> None:  # noqa: S108
         self._run_id = run_id
         self._runs_base_dir = Path(runs_base_dir)
 

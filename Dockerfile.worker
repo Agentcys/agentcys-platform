@@ -1,7 +1,15 @@
 # syntax=docker/dockerfile:1
+
+# Stage 1: extract the terraform binary from the official HashiCorp image
+FROM hashicorp/terraform:1.8 AS terraform-bin
+
+# Stage 2: runtime image
 FROM python:3.12-slim AS base
 
 WORKDIR /app
+
+# Copy terraform binary from stage 1
+COPY --from=terraform-bin /bin/terraform /usr/local/bin/terraform
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
@@ -18,5 +26,5 @@ RUN pip install --no-cache-dir -e . --no-deps
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1
 
-# Worker runs as a Cloud Run Job — no long-lived HTTP server.
+# Worker listens for Cloud Tasks HTTP push deliveries
 CMD ["python", "-m", "worker.main"]

@@ -22,7 +22,7 @@ class WorkerSettings(Settings):
     TF_BINARY: str = "terraform"
 
     # Base directory for per-run working directories
-    RUNS_BASE_DIR: str = "/tmp/agentcys-runs"
+    RUNS_BASE_DIR: str = "/tmp/agentcys-runs"  # noqa: S108
 
 
 @lru_cache(maxsize=1)

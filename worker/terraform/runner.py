@@ -47,12 +47,11 @@ class TerraformRunner:
     ) -> subprocess.CompletedProcess[bytes]:
         cmd = [self._tf_binary, *args]
         logger.info("Running: %s (cwd=%s)", " ".join(cmd), self._working_dir)
-        return subprocess.run(
+        return subprocess.run(  # noqa: S603
             cmd,
             cwd=self._working_dir,
             env=self._env,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
+            capture_output=True,
             timeout=timeout_seconds,
         )
 
