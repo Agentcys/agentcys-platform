@@ -59,6 +59,9 @@ class PlatformEvent(StrEnum):
     # Blueprints
     BLUEPRINT_PUBLISHED = "blueprint.published"
 
+    # State
+    STATE_MIRRORED = "state.mirrored"
+
 
 class AuditSeverity(StrEnum):
     INFO = "info"
