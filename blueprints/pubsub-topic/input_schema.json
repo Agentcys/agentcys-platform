@@ -1,0 +1,46 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "pubsub-topic input schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "project_id",
+    "region",
+    "resource_name_prefix",
+    "topic_name"
+  ],
+  "properties": {
+    "project_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "region": {
+      "type": "string",
+      "minLength": 1
+    },
+    "resource_name_prefix": {
+      "type": "string",
+      "minLength": 1
+    },
+    "topic_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "create_subscription": {
+      "type": "boolean",
+      "default": true
+    },
+    "subscription_ack_deadline_seconds": {
+      "type": "number",
+      "default": 10
+    },
+    "create_dead_letter": {
+      "type": "boolean",
+      "default": false
+    },
+    "dead_letter_max_delivery_attempts": {
+      "type": "number",
+      "default": 5
+    }
+  }
+}

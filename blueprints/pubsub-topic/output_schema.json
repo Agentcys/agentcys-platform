@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "pubsub-topic output schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "topic_name",
+    "topic_id",
+    "subscription_name",
+    "dead_letter_topic_name"
+  ],
+  "properties": {
+    "topic_name": {
+      "type": "string"
+    },
+    "topic_id": {
+      "type": "string"
+    },
+    "subscription_name": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "dead_letter_topic_name": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  }
+}

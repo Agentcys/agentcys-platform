@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "cloud-storage-bucket output schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "bucket_name",
+    "bucket_url",
+    "bucket_self_link"
+  ],
+  "properties": {
+    "bucket_name": {
+      "type": "string"
+    },
+    "bucket_url": {
+      "type": "string"
+    },
+    "bucket_self_link": {
+      "type": "string"
+    }
+  }
+}

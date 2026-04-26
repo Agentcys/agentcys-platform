@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "secret-manager-secret output schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "secret_name",
+    "secret_id",
+    "version_id"
+  ],
+  "properties": {
+    "secret_name": {
+      "type": "string"
+    },
+    "secret_id": {
+      "type": "string"
+    },
+    "version_id": {
+      "type": "string"
+    }
+  }
+}

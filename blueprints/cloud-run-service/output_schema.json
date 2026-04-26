@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "cloud-run-service output schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "service_url",
+    "service_name",
+    "service_id"
+  ],
+  "properties": {
+    "service_url": {
+      "type": "string"
+    },
+    "service_name": {
+      "type": "string"
+    },
+    "service_id": {
+      "type": "string"
+    }
+  }
+}
