@@ -10,8 +10,8 @@ from typing import Any
 from agentcys_platform.config import get_settings
 from agentcys_platform.models.blueprint import Blueprint, BlueprintVersion
 from agentcys_platform.store.firestore import (
-    COLLECTION_BLUEPRINTS,
     COLLECTION_BLUEPRINT_VERSIONS,
+    COLLECTION_BLUEPRINTS,
 )
 
 BLUEPRINTS_DIR = Path(__file__).resolve().parent.parent / "blueprints"
@@ -65,7 +65,9 @@ def _build_blueprint_payloads(bucket_name: str) -> list[tuple[Blueprint, Bluepri
     return payloads
 
 
-async def _write_payloads(project_id: str, payloads: list[tuple[Blueprint, BlueprintVersion]]) -> None:
+async def _write_payloads(
+    project_id: str, payloads: list[tuple[Blueprint, BlueprintVersion]]
+) -> None:
     from google.cloud import firestore
 
     client = firestore.AsyncClient(project=project_id)
@@ -115,7 +117,9 @@ def _print_dry_run(payloads: list[tuple[Blueprint, BlueprintVersion]]) -> None:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Seed first-party blueprint catalog records")
-    parser.add_argument("--dry-run", action="store_true", help="Print intended writes without persisting")
+    parser.add_argument(
+        "--dry-run", action="store_true", help="Print intended writes without persisting"
+    )
     parser.add_argument(
         "--bucket",
         dest="bucket_name",
@@ -137,8 +141,12 @@ async def _main() -> int:
     if not args.dry_run and (args.bucket_name is None or args.project_id is None):
         settings = get_settings()
 
-    bucket_name = args.bucket_name or (settings.BLUEPRINT_BUCKET if settings is not None else "blueprints")
-    project_id = args.project_id or (settings.GCP_PROJECT_ID if settings is not None else "dry-run-project")
+    bucket_name = args.bucket_name or (
+        settings.BLUEPRINT_BUCKET if settings is not None else "blueprints"
+    )
+    project_id = args.project_id or (
+        settings.GCP_PROJECT_ID if settings is not None else "dry-run-project"
+    )
     payloads = _build_blueprint_payloads(bucket_name)
 
     if args.dry_run:
@@ -147,7 +155,8 @@ async def _main() -> int:
 
     await _write_payloads(project_id, payloads)
     print(
-        f"Seeded {len(payloads)} blueprints into Firestore project {project_id} from {BLUEPRINTS_DIR}"
+        f"Seeded {len(payloads)} blueprints into Firestore project "
+        f"{project_id} from {BLUEPRINTS_DIR}"
     )
     return 0
 

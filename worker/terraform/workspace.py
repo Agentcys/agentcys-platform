@@ -18,8 +18,8 @@ class WorkspaceManager:
     """
 
     def __init__(
-        self, run_id: str, runs_base_dir: str = "/tmp/agentcys-runs"
-    ) -> None:  # noqa: S108
+        self, run_id: str, runs_base_dir: str = "/tmp/agentcys-runs"  # noqa: S108
+    ) -> None:
         self._run_id = run_id
         self._runs_base_dir = Path(runs_base_dir)
 
