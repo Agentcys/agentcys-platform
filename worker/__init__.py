@@ -1,1 +1,1 @@
-"""Terraform worker — Cloud Run Job implementation (Prompt 4)."""
+"""Terraform worker — Cloud Tasks push handler for deployment execution."""
